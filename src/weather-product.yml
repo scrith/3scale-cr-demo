@@ -1,0 +1,104 @@
+apiVersion: capabilities.3scale.net/v1beta1
+kind: Product
+metadata:
+  name: weather-alerts-product
+  namespace: 3scale
+spec:
+  name: Weather Alerts API
+  systemName: weather-alerts-product
+  description: Get state-level weather alerts
+  mappingRules:
+  - httpMethod: GET
+    pattern: "/echo"
+    metricMethodRef: hits
+    increment: 1
+    last: false
+  - httpMethod: GET
+    pattern: "/alerts/active$"
+    metricMethodRef: activealertsbyarugment
+    increment: 1
+    last: false
+  - httpMethod: GET
+    pattern: "/alerts/active/area/{state}$"
+    metricMethodRef: activealertsbyurl
+    increment: 1
+    last: false
+  metrics:
+    hits:
+      friendlyName: Hits
+      unit: hit
+      description: Number of API hits
+  methods:
+    activealertsbyarugment:
+      friendlyName: ActiveAlertsByArugment
+      description: Returns a list of alerts based on state as an argument.
+    activealertsbyurl:
+      friendlyName: ActiveAlertsByURL
+      description: Returns a list of alerts based on state as a url.
+  policies:
+  - name: routing
+    version: builtin
+    configuration:
+      rules:
+      - condition:
+          combine_op: and
+          operations:
+          - value_type: plain
+            value: "/echo"
+            match: path
+            op: matches
+          - value_type: plain
+            match: header
+            header_name: x-client-version
+            op: matches
+            value: test
+        url: https://echo-api.3scale.net:443
+    enabled: true
+  - name: apicast
+    version: builtin
+    configuration: {}
+    enabled: true
+  - name: url_rewriting
+    version: builtin
+    configuration:
+      query_args_commands:
+      - value_type: plain
+        op: delete
+        arg: user_key
+    enabled: true
+  applicationPlans:
+    weather-plan:
+      name: Weather Alerts Plan
+      appsRequireApproval: false
+      trialPeriod: 0
+      setupFee: 0.0
+      custom: false
+      state: published
+      costMonth: 0.0
+      pricingRules: []
+      limits: []
+  backendUsages:
+    weather-alerts:
+      path: "/"
+  deployment:
+    apicastHosted:
+      authentication:
+        userkey:
+          authUserKey: user_key
+          credentials: query
+          security:
+            hostHeader: 
+            secretToken: Shared_secret_sent_from_proxy_to_API_backend_60afc49352e2bdb1
+          gatewayResponse:
+            errorStatusAuthFailed: 403
+            errorHeadersAuthFailed: text/plain; charset=us-ascii
+            errorAuthFailed: Authentication failed
+            errorStatusAuthMissing: 403
+            errorHeadersAuthMissing: text/plain; charset=us-ascii
+            errorAuthMissing: Authentication parameters missing
+            errorStatusNoMatch: 404
+            errorHeadersNoMatch: text/plain; charset=us-ascii
+            errorNoMatch: No Mapping Rule matched
+            errorStatusLimitsExceeded: 429
+            errorHeadersLimitsExceeded: text/plain; charset=us-ascii
+            errorLimitsExceeded: Usage limit exceeded

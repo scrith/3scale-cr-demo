@@ -1,0 +1,17 @@
+apiVersion: capabilities.3scale.net/v1beta1
+kind: Backend
+metadata:
+  name: weather-alerts-backend
+  namespace: 3scale
+spec:
+  name: Weather Alerts API Backend
+  systemName: weather-alerts-backend
+  privateBaseURL: https://api.weather.gov:443
+  description: Backend of Weather Alerts API
+  mappingRules: []
+  metrics:
+    hits:
+      friendlyName: Hits
+      unit: hit
+      description: Number of API hits
+  methods: {}
