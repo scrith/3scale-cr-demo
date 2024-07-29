@@ -1,0 +1,59 @@
+apiVersion: capabilities.3scale.net/v1beta1
+kind: Product
+metadata:
+  name: weather-alerts-api
+  namespace: 3scale
+spec:
+  name: Weather Alerts API Product
+  systemName: weather-alerts-api
+  providerAccountRef:
+    name: 3scale-tenant-secret
+  description: Get state-level weather alerts
+  mappingRules:
+  - httpMethod: GET
+    pattern: "/alerts/active$"
+    metricMethodRef: activealertsbyarugment
+    increment: 1
+    last: false
+  - httpMethod: GET
+    pattern: "/alerts/active/area/{state}$"
+    metricMethodRef: activealertsbyurl
+    increment: 1
+    last: false
+  - httpMethod: GET
+    pattern: "/echo$"
+    metricMethodRef: echo
+    increment: 1
+    last: false
+  metrics:
+    hits:
+      friendlyName: Hits
+      unit: hit
+      description: Number of API hits
+  methods:
+    activealertsbyarugment:
+      friendlyName: ActiveAlertsByArugment
+      description: Returns a list of alerts based on state as an argument.
+    activealertsbyurl:
+      friendlyName: ActiveAlertsByURL
+      description: Returns a list of alerts based on state as a url.
+    echo:
+      friendlyName: Echo
+      description: Echoes back request details
+  policies:
+  - name: apicast
+    version: builtin
+    configuration: {}
+    enabled: true
+  - name: url_rewriting
+    version: builtin
+    configuration:
+      query_args_commands:
+      - value_type: plain
+        op: delete
+        arg: user_key
+    enabled: true
+  applicationPlans: {}
+  backendUsages:
+    weather-alerts-backend:
+      path: "/"

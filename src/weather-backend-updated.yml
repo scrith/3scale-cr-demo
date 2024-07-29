@@ -16,3 +16,7 @@ spec:
       friendlyName: Hits
       unit: hit
       description: Number of API hits
+  methods:
+    sameplemethod:
+      friendlyName: New Sample Method
+      description: Additional Method to use for tracking.

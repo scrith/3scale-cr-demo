@@ -20,11 +20,28 @@ spec:
       friendlyName: Hits
       unit: hit
       description: Number of API hits
-  methods: {}
+  methods:
+    activealertsbyarugment:
+      friendlyName: ActiveAlertsByArugment
+      description: Returns a list of alerts based on state as an argument.
+    activealertsbyurl:
+      friendlyName: ActiveAlertsByURL
+      description: Returns a list of alerts based on state as a url.
+    echo:
+      friendlyName: Echo
+      description: Echoes back request details
   policies:
   - name: apicast
     version: builtin
     configuration: {}
+    enabled: true
+  - name: url_rewriting
+    version: builtin
+    configuration:
+      query_args_commands:
+      - value_type: plain
+        op: delete
+        arg: user_key
     enabled: true
   applicationPlans: {}
   backendUsages:
