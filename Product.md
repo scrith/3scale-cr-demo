@@ -39,6 +39,8 @@ spec:
 
 This will create a very basic API Product, but it will not be fully functional yet. We will need to add some additional details to the yaml and update the CR. We can start by defining a new entry in our policy chain that we know will be required for this API to make successful calls to the backend.
 
+# New Policy
+
 Update the `policies` section with the additional policy to remove the `user_key` after processing by the gateway, but before passing the request to the backend. For that we will utilize the `url_rewriting` policy.
 
 ~~~
@@ -56,6 +58,9 @@ Update the `policies` section with the additional policy to remove the `user_key
         arg: user_key
     enabled: true
 ~~~
+
+
+## Tracking Methods
 
 We can also define the methods we plan to use for tracking the calls to the API by defining the `methods` yaml section:
 
@@ -78,6 +83,8 @@ Apply the changes to update the CR.
 $ oc apply -f weather-product-update-1.yml 
 product.capabilities.3scale.net/weather-alerts-api configured
 ~~~
+
+## Mapping Rules
 
 Now that we've configured the methods for tracking, we can next create the Mapping Rules, by updating the `mappingRules` section:
 
@@ -107,6 +114,8 @@ $ oc apply -f weather-product-update-2.yml
 product.capabilities.3scale.net/weather-alerts-api configured
 ~~~
 
+## Add Application Plan
+
 The last required part of the definition to update is to make an Application Plan for the Product. Update the `applicationPlans` section with this definition:
 
 ~~~
@@ -129,6 +138,8 @@ Apply the changes to the updated CR.
 $ oc apply -f weather-product-update-3.yml 
 product.capabilities.3scale.net/weather-alerts-api configured
 ~~~
+
+## Routing Policy
 
 The final change we will make in this demo is to add an additional policy to route specific requests to a different service. Update the `policies` section as follows, adding a `routing` policy above `apicast`:
 
@@ -163,11 +174,13 @@ The final change we will make in this demo is to add an additional policy to rou
 
 This new policy will route requests that match "/echo" to the 3scale.net echo-api service.
 
+## Update Base URLs
+
 An optional step that is useful in many environments is to update the URLs for the staging and production endpoints. This can easily be accomplished by appending this code to the end of the yaml for thr Product CR:
 
 ~~~
   deployment:
-    apicastSelfManaged:
+    apicastHosted:
       stagingPublicBaseURL: "https://weather-api-staging.apps.phagerma.lab.upshift.rdu2.redhat.com"
       productionPublicBaseURL: "https://weather-api.apps.phagerma.lab.upshift.rdu2.redhat.com"
 ~~~
