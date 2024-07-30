@@ -79,7 +79,3 @@ spec:
   backendUsages:
     weather-alerts-backend:
       path: "/"
-  deployment:
-    apicastSelfManaged:
-      stagingPublicBaseURL: "https://weather-api-staging.apps.phagerma.lab.upshift.rdu2.redhat.com"
-      productionPublicBaseURL: "https://weather-api.apps.phagerma.lab.upshift.rdu2.redhat.com"

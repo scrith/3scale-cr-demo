@@ -174,17 +174,6 @@ The final change we will make in this demo is to add an additional policy to rou
 
 This new policy will route requests that match "/echo" to the 3scale.net echo-api service.
 
-## Update Base URLs
-
-An optional step that is useful in many environments is to update the URLs for the staging and production endpoints. This can easily be accomplished by appending this code to the end of the yaml for thr Product CR:
-
-~~~
-  deployment:
-    apicastHosted:
-      stagingPublicBaseURL: "https://weather-api-staging.apps.phagerma.lab.upshift.rdu2.redhat.com"
-      productionPublicBaseURL: "https://weather-api.apps.phagerma.lab.upshift.rdu2.redhat.com"
-~~~
-
 Now apply the changes to the updated CR.
 
 ~~~
