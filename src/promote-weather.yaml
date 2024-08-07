@@ -1,0 +1,13 @@
+apiVersion: capabilities.3scale.net/v1beta1
+kind: ProxyConfigPromote
+metadata:
+  name: promote-weather-alerts-api
+  namespace: 3scale
+spec:
+  name: Weather Alerts API Product
+  systemName: weather-alerts-api
+  providerAccountRef:
+    name: 3scale-tenant-secret
+  productCRName: weather-alerts-api
+  deleteCR: true
+  production: true
